@@ -1,0 +1,4 @@
+languageCode: "en-us"
+baseURL: "https://blog.aftnet.net/"
+theme: "hugo-ink"
+paginate: 10
