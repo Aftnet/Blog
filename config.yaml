@@ -1,6 +1,6 @@
 languageCode: "en-us"
-baseUrl: ""
-title: "Anubis"
+baseUrl: "https://blog.aftnet.net"
+title: "Aftnet Blog"
 theme: "anubis"
 paginate: 10
 disqusShortname: "yourdiscussshortname"
@@ -16,9 +16,9 @@ menu:
     weight: 0
 
 params:
-  author: "John Doe"
-  email: mail@example.org # used for microformats
-  avatar: "/images/me.png" # used for microformats
+  author: "Alberto Fustinoni"
+  email: malberto@aftnet.net # used for microformats
+  avatar: "/images/avatar.png" # used for microformats
   description: ""
   dateFormat: "2006-01-02"
   paginationSinglePost: true
@@ -30,4 +30,4 @@ params:
   rssAsSocialIcon: true
   social:
   - id: github
-    name: gohugoio
+    name: aftnet
