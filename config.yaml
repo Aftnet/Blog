@@ -1,4 +1,33 @@
 languageCode: "en-us"
-baseURL: "https://blog.aftnet.net/"
-theme: "hugo-ink"
+baseUrl: ""
+title: "Anubis"
+theme: "anubis"
 paginate: 10
+disqusShortname: "yourdiscussshortname"
+googleAnalytics: "G-12345"
+enableRobotsTXT: true
+
+menu:
+  main:
+  - identifier: archive
+    name: Archive
+    title: Archive
+    url: /posts/
+    weight: 0
+
+params:
+  author: "John Doe"
+  email: mail@example.org # used for microformats
+  avatar: "/images/me.png" # used for microformats
+  description: ""
+  dateFormat: "2006-01-02"
+  paginationSinglePost: true
+  style: light-without-switcher
+  readMore: false # show read more button
+  readNextPosts: 5  # show 5 related posts, 0 by default
+  disableSummary: false
+  copyCodeButton: true # true by default
+  rssAsSocialIcon: true
+  social:
+  - id: github
+    name: gohugoio
