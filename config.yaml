@@ -3,7 +3,7 @@ baseUrl: "https://blog.aftnet.net"
 title: "Aftnet Blog"
 theme: "anubis"
 paginate: 10
-disqusShortname: "yourdiscussshortname"
+#disqusShortname: "yourdiscussshortname"
 googleAnalytics: "G-YXPWFSLCRB"
 enableRobotsTXT: true
 
@@ -31,3 +31,5 @@ params:
   social:
   - id: github
     name: aftnet
+  - id: reddit
+    name: kaworu1986
