@@ -39,7 +39,7 @@ The 10Gbit service, フレッツ光 X, is the exception, as it uses prefix deleg
 
 IPv4 relies on this working, so it needs to be setup first.
 
-To check things are working, one can go to [http://flets-v6.jp/](http://flets-v6.jp/): a website internal to NTT's NGN and only available via IPv6.
+To check things are working, one can go to [flets-v6.jp](http://flets-v6.jp/): a website internal to NTT's NGN and only available via IPv6.
 
 As a bonus, the speedtest there is the most accurate indicator of what speed one's line is capable of: if the speeds there are high but other speedtests and general performance is slow, it is a good indicator the ISP is at fault and moving can improve things.
 
