@@ -19,7 +19,7 @@ IPv4 connectivity, what 90% of the internet still uses, is provided in one of tw
 - PPPoE tunneling, which usually gives a public IPv4 but which tends to be slow due to congestion and which is is on the way out
 - IPoE, in one of three main flavors (MAP-E, MAP-T or DS-Lite): this is usually a lot faster and where investment is being made. Unless a public IPv4 is essential, this is the recommended way.
 
-Which flavor of IPoE is used depends on ISP, and while all three are actual standards, only DS-Lite has any actual support in non Japan-only devices - so pick accordingly (I use IIJ myself). Most ISPs will allow to use PPPoE even when IPoE has been requested, and one can even conract with multiple ISPs simultaneously and establish up to three PPPoE tunnels concurrently.
+Which flavor of IPoE is used depends on ISP, and while all three are actual standards, only DS-Lite has any actual support in non Japan-only devices - so pick accordingly (I use IIJ myself). Most ISPs will allow to use PPPoE even when IPoE has been requested, and one can even contract with multiple ISPs simultaneously and establish up to three PPPoE tunnels concurrently.
 
 Given that PPPoE is very well supported in routers, easy to setup and less performant than IPoE, I will not address it further here. One can setup basic PPPoE IPv4 only connectivity much like most ADSL ISPs in the rest of the world.
 
@@ -60,7 +60,7 @@ This is where the extra fees pay off: IPv6 is provided via standard prefix deleg
 - NTT will **not** assign an IPv6 address to the interface requesting the delegation. I recommend assigning an address from the delegated prefix to the router's loopback interface as a fallback (useful for IPv4 connectivity)
 - Gateway will be assigned via DHCPv6 as well
 
-There is no plug and play with this setup: NTT does not send router advertisents, so directly attached devices will not autoconfigure IPv6 connectivity.
+There is no plug and play with this setup: NTT does not send router advertisements, so directly attached devices will not autoconfigure IPv6 connectivity.
 
 NTT also runs IPv4 DHCP, but it is only for VoIP: the device may get an address but it will not be able to use it to access the internet. One should be able to have something like Asterisk configure a SIP trunk using that DHCP configuration but it's not something I looked into.
 
@@ -84,7 +84,7 @@ Local address | Remote address | Subnet mask
 
 ### Outer tunnel addresses
 
-Outer tunnel local endopoint is any IPv6 address assigned to the router: here is where assigning an IPv6 from the allocated prefix to the loopback interface comes in handy, since
+Outer tunnel local endpoint is any IPv6 address assigned to the router: here is where assigning an IPv6 from the allocated prefix to the loopback interface comes in handy, since
 
 - It's hard to impossible to configure most router OSes to do prefix delegation and static assignment on the same interface
 - Using another (e.g. the LAN) physical interface's IPv6 address works only if that interface is actually connected to a switch/device
