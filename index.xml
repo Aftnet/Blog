@@ -58,8 +58,9 @@
 &lt;li>Prefix length is /56. While I read of NTT delegating a /48 in places, requesting one has never worked for me&lt;/li>
 &lt;li>NTT &lt;strong>requires&lt;/strong> the DHCPv6 client&amp;rsquo;s DUID to be in DUID-LL format (00:03:00:01:MAC_ADDRESS) where MAC_ADDRESS is a hex string in XX:XX:XX:XX:XX:XX format. If this is not the case NTT will not delegate a prefix&lt;/li>
 &lt;li>NTT will &lt;strong>not&lt;/strong> assign an IPv6 address to the interface requesting the delegation. I recommend assigning an address from the delegated prefix to the router&amp;rsquo;s loopback interface as a fallback (useful for IPv4 connectivity)&lt;/li>
+&lt;li>Gateway will be assigned via DHCPv6 as well&lt;/li>
 &lt;/ul>
-&lt;p>There is no plug and play with this setup: NTT does not send router advertisents in this setup, so directly attached devices will not autoconfigure IPv6 connectivity.&lt;/p>
+&lt;p>There is no plug and play with this setup: NTT does not send router advertisents, so directly attached devices will not autoconfigure IPv6 connectivity.&lt;/p>
 &lt;p>NTT also runs IPv4 DHCP, but it is only for VoIP: the device may get an address but it will not be able to use it to access the internet. One should be able to have something like Asterisk configure a SIP trunk using that DHCP configuration but it&amp;rsquo;s not something I looked into.&lt;/p>
 &lt;h2 id="ipv4-connectivity" >IPv4 connectivity
 &lt;span>
@@ -67,4 +68,70 @@
 &lt;svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg">&lt;path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;/svg>
 &lt;/a>
 &lt;/span>
-&lt;/h2>&lt;p>Once IPv6 connectivity is working, IPv4 can be set up.&lt;/p></description></item></channel></rss>
+&lt;/h2>&lt;p>Once IPv6 connectivity is working, IPv4 can be set up. Fortunately, even in instances where router OSes do not directly mention DS-Lite, it can be setup via appropriately configured tunnels.&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://docs.vyos.io/en/latest/configuration/interfaces/tunnel.html#ipip6">IPIP6 tunnels&lt;/a> in VyOS and derivatives like EdgeOS&lt;/li>
+&lt;li>&lt;a href="https://docs.opnsense.org/manual/other-interfaces.html#gif">GIF tunnels&lt;/a> in OPNSense/PFSense&lt;/li>
+&lt;li>There is probably an equivalent in &amp;ldquo;naked&amp;rdquo; Linux, if one wants to just setup something like a bog standard Debian for routing&lt;/li>
+&lt;/ul>
+&lt;p>In all cases, the configuration boils down to what internal and external IP addresses to use for the tunnel&amp;rsquo;s local (the router) and remote (the AFTR servers in NTT&amp;rsquo;s network) endpoints.&lt;/p>
+&lt;h3 id="inner-tunnel-addresses" >Inner tunnel addresses
+&lt;span>
+&lt;a href="#inner-tunnel-addresses">
+&lt;svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg">&lt;path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;/svg>
+&lt;/a>
+&lt;/span>
+&lt;/h3>&lt;p>Inner tunnel (IPv4) addressing is constant and part of the DL-Lite standard itself (&lt;a href="https://www.rfc-editor.org/rfc/rfc6333">rfc6333, section 5.7&lt;/a>). On some OSes it may not be necessary to configure these.&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Local address&lt;/th>
+&lt;th>Remote address&lt;/th>
+&lt;th>Subnet mask&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>192.0.0.2&lt;/td>
+&lt;td>192.0.0.1&lt;/td>
+&lt;td>/29&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h3 id="outer-tunnel-addresses" >Outer tunnel addresses
+&lt;span>
+&lt;a href="#outer-tunnel-addresses">
+&lt;svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg">&lt;path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;/svg>
+&lt;/a>
+&lt;/span>
+&lt;/h3>&lt;p>Outer tunnel local endopoint is any IPv6 address assigned to the router: here is where assigning an IPv6 from the allocated prefix to the loopback interface comes in handy, since&lt;/p>
+&lt;ul>
+&lt;li>It&amp;rsquo;s hard to impossible to configure most router OSes to do prefix delegation and static assignment on the same interface&lt;/li>
+&lt;li>Using another (e.g. the LAN) physical interface&amp;rsquo;s IPv6 address works only if that interface is actually connected to a switch/device&lt;/li>
+&lt;/ul>
+&lt;p>Outer tunnel remote endpoints (NTT&amp;rsquo;s AFTR servers) depend on whether one is an NTT East or West customer. Choose either of the ones for your area.&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>NTT East (NTT東日本)&lt;/th>
+&lt;th>NTT West (NTT西日本)&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>2404:8e00::feed:100&lt;/td>
+&lt;td>2404:8e01::feed:100&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2404:8e00::feed:101&lt;/td>
+&lt;td>2404:8e01::feed:101&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h2 id="the-rest" >The rest
+&lt;span>
+&lt;a href="#the-rest">
+&lt;svg viewBox="0 0 28 23" height="100%" width="19" xmlns="http://www.w3.org/2000/svg">&lt;path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>&lt;/svg>
+&lt;/a>
+&lt;/span>
+&lt;/h2>&lt;p>Depending on your router/OS you may still need to set up appropriate gateways and/or static routes to get connectivity working: without DHCP assigned gateways the router needs to be told where to forward packets to networks not directly connected, but that is standard configuration that applies everywhere.&lt;/p></description></item></channel></rss>
