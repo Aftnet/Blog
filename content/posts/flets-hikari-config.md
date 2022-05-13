@@ -58,12 +58,44 @@ This is where the extra fees pay off: IPv6 is provided via standard prefix deleg
 - Prefix length is /56. While I read of NTT delegating a /48 in places, requesting one has never worked for me
 - NTT **requires** the DHCPv6 client's DUID to be in DUID-LL format (00:03:00:01:MAC_ADDRESS) where MAC_ADDRESS is a hex string in XX:XX:XX:XX:XX:XX format. If this is not the case NTT will not delegate a prefix
 - NTT will **not** assign an IPv6 address to the interface requesting the delegation. I recommend assigning an address from the delegated prefix to the router's loopback interface as a fallback (useful for IPv4 connectivity)
+- Gateway will be assigned via DHCPv6 as well
 
-There is no plug and play with this setup: NTT does not send router advertisents in this setup, so directly attached devices will not autoconfigure IPv6 connectivity.
+There is no plug and play with this setup: NTT does not send router advertisents, so directly attached devices will not autoconfigure IPv6 connectivity.
 
 NTT also runs IPv4 DHCP, but it is only for VoIP: the device may get an address but it will not be able to use it to access the internet. One should be able to have something like Asterisk configure a SIP trunk using that DHCP configuration but it's not something I looked into.
 
 ## IPv4 connectivity
 
-Once IPv6 connectivity is working, IPv4 can be set up.
+Once IPv6 connectivity is working, IPv4 can be set up. Fortunately, even in instances where router OSes do not directly mention DS-Lite, it can be setup via appropriately configured tunnels.
 
+- [IPIP6 tunnels](https://docs.vyos.io/en/latest/configuration/interfaces/tunnel.html#ipip6) in VyOS and derivatives like EdgeOS 
+- [GIF tunnels](https://docs.opnsense.org/manual/other-interfaces.html#gif) in OPNSense/PFSense
+- There is probably an equivalent in "naked" Linux, if one wants to just setup something like a bog standard Debian for routing
+
+In all cases, the configuration boils down to what internal and external IP addresses to use for the tunnel's local (the router) and remote (the AFTR servers in NTT's network) endpoints.
+
+### Inner tunnel addresses
+
+Inner tunnel (IPv4) addressing is constant and part of the DL-Lite standard itself ([rfc6333, section 5.7](https://www.rfc-editor.org/rfc/rfc6333)). On some OSes it may not be necessary to configure these.
+
+Local address | Remote address | Subnet mask
+--------------|----------------|-------------
+192.0.0.2     | 192.0.0.1      | /29
+
+### Outer tunnel addresses
+
+Outer tunnel local endopoint is any IPv6 address assigned to the router: here is where assigning an IPv6 from the allocated prefix to the loopback interface comes in handy, since
+
+- It's hard to impossible to configure most router OSes to do prefix delegation and static assignment on the same interface
+- Using another (e.g. the LAN) physical interface's IPv6 address works only if that interface is actually connected to a switch/device
+
+Outer tunnel remote endpoints (NTT's AFTR servers) depend on whether one is an NTT East or West customer. Choose either of the ones for your area.
+
+NTT East (NTT東日本) | NTT West (NTT西日本)
+---------------------|--------------------
+2404:8e00::feed:100  | 2404:8e01::feed:100
+2404:8e00::feed:101  | 2404:8e01::feed:101
+
+## The rest
+
+Depending on your router/OS you may still need to set up appropriate gateways and/or static routes to get connectivity working: without DHCP assigned gateways the router needs to be told where to forward packets to networks not directly connected, but that is standard configuration that applies everywhere.
