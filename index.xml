@@ -36,7 +36,7 @@
 &lt;/a>
 &lt;/span>
 &lt;/h2>&lt;p>IPv4 relies on this working, so it needs to be setup first.&lt;/p>
-&lt;p>To check things are working, one can go to &lt;a href="http://flets-v6.jp/">http://flets-v6.jp/&lt;/a>: a website internal to NTT&amp;rsquo;s NGN and only available via IPv6.&lt;/p>
+&lt;p>To check things are working, one can go to &lt;a href="http://flets-v6.jp/">flets-v6.jp&lt;/a>: a website internal to NTT&amp;rsquo;s NGN and only available via IPv6.&lt;/p>
 &lt;p>As a bonus, the speedtest there is the most accurate indicator of what speed one&amp;rsquo;s line is capable of: if the speeds there are high but other speedtests and general performance is slow, it is a good indicator the ISP is at fault and moving can improve things.&lt;/p>
 &lt;h3 id="without-hikari-denwa" >Without Hikari Denwa
 &lt;span>
